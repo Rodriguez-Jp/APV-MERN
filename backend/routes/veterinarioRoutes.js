@@ -5,12 +5,13 @@ import {
   confirmar,
   autenticar,
 } from "../controllers/veterinarioController.js";
+import checkAuth from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.post("/", registrar);
 
-router.get("/perfil", perfil);
+router.get("/perfil", checkAuth, perfil);
 
 router.get("/confirmar/:token", confirmar);
 

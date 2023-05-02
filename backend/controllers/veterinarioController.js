@@ -1,4 +1,5 @@
 import Veterinario from "../models/Veterinario.js";
+import generarJWT from "../helpers/generarJWT.js";
 
 const registrar = async (req, res) => {
   const { email } = req.body;
@@ -74,7 +75,8 @@ const autenticar = async (req, res) => {
     return res.status(403).json({ msg: error.message });
   }
 
-  res.json({ msg: "Usuario autenticado!" });
+  //Generamos el JWT
+  res.json({ token: generarJWT(usuario.id) });
 };
 
 export { registrar, perfil, confirmar, autenticar };
