@@ -79,4 +79,25 @@ const autenticar = async (req, res) => {
   res.json({ token: generarJWT(usuario.id) });
 };
 
-export { registrar, perfil, confirmar, autenticar };
+const olvidePassword = (req, res) => {
+  const { email } = req.body;
+  res.json({ msg: email });
+};
+
+const comprobarToken = (req, res) => {
+  console.log(req);
+};
+
+const nuevoPassword = (req, res) => {
+  console.log(req);
+};
+
+export {
+  registrar,
+  perfil,
+  confirmar,
+  autenticar,
+  olvidePassword,
+  comprobarToken,
+  nuevoPassword,
+};
