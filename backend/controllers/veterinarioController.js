@@ -1,5 +1,6 @@
 import Veterinario from "../models/Veterinario.js";
 import generarJWT from "../helpers/generarJWT.js";
+import generarId from "../helpers/generarId.js";
 
 const registrar = async (req, res) => {
   const { email } = req.body;
@@ -80,4 +81,67 @@ const autenticar = async (req, res) => {
   res.json({ token: generarJWT(usuario.id) });
 };
 
-export { registrar, perfil, confirmar, autenticar };
+const olvidePassword = async (req, res) => {
+  const { email } = req.body;
+
+  //Buscamos el email en la base de datos
+  const existeEmail = await Veterinario.findOne({ email });
+  if (!existeEmail) {
+    const error = new Error("El usuario no existe");
+    return res.status(400).json({ msg: error.message });
+  }
+  //En caso de existir genera el token y envia el correo
+  try {
+    existeEmail.token = generarId();
+    await existeEmail.save();
+    res.json({ msg: "Hemos enviado un email con las instrucciones" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const comprobarToken = async (req, res) => {
+  const { token } = req.params;
+
+  //Validamos si el token es valido
+  const tokenValido = await Veterinario.findOne({ token });
+
+  if (!tokenValido) {
+    const error = Error("El token suministrado no es valido");
+    return res.status(400).json({ msg: error.message });
+  }
+
+  res.json({ msg: "Token valido y el usuario existe" });
+};
+
+const nuevoPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  const veterinario = await Veterinario.findOne({ token });
+
+  if (!veterinario) {
+    const error = Error("Hubo un error");
+    return res.status(400).json({ msg: error.message });
+  }
+
+  //En caso de que exista el user, recibe la nueva password
+  try {
+    veterinario.token = null;
+    veterinario.password = password;
+    await veterinario.save();
+    res.json({ msg: "Password modificado exitosamente" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  registrar,
+  perfil,
+  confirmar,
+  autenticar,
+  olvidePassword,
+  comprobarToken,
+  nuevoPassword,
+};
