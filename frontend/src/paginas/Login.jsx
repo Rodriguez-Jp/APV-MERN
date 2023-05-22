@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Login = () => {
   return (
     <>
@@ -33,12 +35,22 @@ const Login = () => {
               className="border border-slate-400  rounded-lg p-2"
             />
           </div>
-          <input
-            type="submit"
-            value="Iniciar sesion"
-            className="p-2 rounded-lg mt-4 bg-lime-600 text-white w-full hover:cursor-pointer hover:bg-lime-600/90 transition-colors duration-200"
-          />
+          <div className="p-2">
+            <input
+              type="submit"
+              value="Iniciar sesion"
+              className="p-2 rounded-lg mt-4 bg-lime-600 text-white w-full hover:cursor-pointer hover:bg-lime-600/90 transition-colors duration-200"
+            />
+          </div>
         </form>
+        <nav className="lg:flex justify-between my-10 text-center">
+          <Link to="/registrar" className="text-gray-400 p-2">
+            <h2>No tienes una cuenta? Registrate</h2>
+          </Link>
+          <Link to="/olvide-password" className="text-gray-400 p-2">
+            <h2>Olvide mi password</h2>
+          </Link>
+        </nav>
       </div>
     </>
   );
