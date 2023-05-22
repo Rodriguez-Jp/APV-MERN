@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 const Login = () => {
   return (
     <>
-      <div>
+      <div className="mt-20 md:mt-10">
         <h1 className="text-lime-600 font-black text-6xl">
           Inicia Sesion y Administra a tus{" "}
           <span className="text-black">Pacientes</span>
         </h1>
       </div>
-      <div>
+      <div className="shadow-xl px-5 py-10 rounded-xl mt-20 md:mt-10">
         <form action="" className="md:flex flex-col justify-center">
           <div className="flex flex-col p-2">
             <label htmlFor="" className="text-3xl font-bold ">
