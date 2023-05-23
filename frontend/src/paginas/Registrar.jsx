@@ -1,10 +1,39 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import Alerta from "../components/Alerta";
+
 const Registrar = () => {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [verificarPassword, setVerificarPassword] = useState("");
+  const [alerta, setAlerta] = useState({});
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if ([nombre, email, password, verificarPassword].includes("")) {
+      setAlerta({
+        msg: "Por favor diligencia todos los campos",
+        tipo: "error",
+      });
+      return;
+    }
+
+    if (password !== verificarPassword) {
+      setAlerta({ msg: "Las password no coinciden", tipo: "error" });
+      return;
+    }
+
+    if (password.length < 6) {
+      setAlerta({ msg: "La password es demasiado corta", tipo: "error" });
+      return;
+    }
+
+    setAlerta({});
+  };
+
+  const { msg } = alerta;
 
   return (
     <>
@@ -15,7 +44,12 @@ const Registrar = () => {
         </h1>
       </div>
       <div className="shadow-xl px-5 py-10 rounded-xl mt-20 md:mt-10">
-        <form action="" className="md:flex flex-col justify-center">
+        {msg && <Alerta alerta={alerta.msg} />}
+        <form
+          action=""
+          className="md:flex flex-col justify-center"
+          onSubmit={handleSubmit}
+        >
           <div className="flex flex-col p-2">
             <label htmlFor="" className="text-3xl font-bold ">
               Nombre
@@ -41,7 +75,7 @@ const Registrar = () => {
               id="email"
               className="border border-slate-400  rounded-lg p-2 mt-2"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value.trim())}
             />
           </div>
           <div className="flex flex-col p-2">
@@ -65,8 +99,8 @@ const Registrar = () => {
             <input
               placeholder="Verifica tu password"
               type="password"
-              name="password"
-              id="password"
+              name="verificarPassword"
+              id="verificarPassword"
               className="border border-slate-400  rounded-lg p-2 mt-2"
               value={verificarPassword}
               onChange={(e) => setVerificarPassword(e.target.value)}
