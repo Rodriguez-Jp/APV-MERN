@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Alerta from "../components/Alerta";
+import axios from "axios";
 
 const Registrar = () => {
   const [nombre, setNombre] = useState("");
@@ -9,28 +10,41 @@ const Registrar = () => {
   const [verificarPassword, setVerificarPassword] = useState("");
   const [alerta, setAlerta] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if ([nombre, email, password, verificarPassword].includes("")) {
       setAlerta({
         msg: "Por favor diligencia todos los campos",
-        tipo: "error",
+        error: true,
       });
       return;
     }
 
     if (password !== verificarPassword) {
-      setAlerta({ msg: "Las password no coinciden", tipo: "error" });
+      setAlerta({ msg: "Las password no coinciden", error: true });
       return;
     }
 
     if (password.length < 6) {
-      setAlerta({ msg: "La password es demasiado corta", tipo: "error" });
+      setAlerta({ msg: "La password es demasiado corta", error: true });
       return;
     }
 
     setAlerta({});
+
+    //En caso de pasar las validaciones, sube el formulario a la API
+    try {
+      const url = "http://localhost:4000/api/veterinarios";
+      await axios.post(url, { nombre, email, password });
+
+      setAlerta({
+        msg: "Veterinario registrado, revisa tu email para confirmar tu cuenta",
+        error: false,
+      });
+    } catch (error) {
+      setAlerta({ msg: error.response.data.msg, error: true });
+    }
   };
 
   const { msg } = alerta;
@@ -44,7 +58,7 @@ const Registrar = () => {
         </h1>
       </div>
       <div className="shadow-xl px-5 py-10 rounded-xl mt-20 md:mt-10">
-        {msg && <Alerta alerta={alerta.msg} />}
+        {msg && <Alerta alerta={alerta} />}
         <form
           action=""
           className="md:flex flex-col justify-center"
@@ -75,7 +89,7 @@ const Registrar = () => {
               id="email"
               className="border border-slate-400  rounded-lg p-2 mt-2"
               value={email}
-              onChange={(e) => setEmail(e.target.value.trim())}
+              onChange={(e) => setEmail(e.target.value.trim().toLowerCase())}
             />
           </div>
           <div className="flex flex-col p-2">
