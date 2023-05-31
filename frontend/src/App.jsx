@@ -4,6 +4,7 @@ import Login from "./paginas/Login";
 import OlvidePassword from "./paginas/OlvidePassword";
 import ConfirmarCuenta from "./paginas/ConfirmarCuenta";
 import Registrar from "./paginas/Registrar";
+import NuevoPassword from "./paginas/NuevoPassword";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<AuthLayout />}>
           <Route index element={<Login />} />
+          <Route path="olvide-password/:token" element={<NuevoPassword />} />
           <Route path="olvide-password" element={<OlvidePassword />} />
           <Route path="registrar" element={<Registrar />} />
           <Route path="confirmar/:id" element={<ConfirmarCuenta />} />
