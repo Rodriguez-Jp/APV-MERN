@@ -10,7 +10,7 @@ dotenv.config();
 conectarDB();
 
 //Validacion CORS
-const dominiosPermitidos = ["http://localhost:5173"];
+const dominiosPermitidos = [process.env.FRONTEND_URL];
 const corsOptions = {
   origin: function (origin, callback) {
     if (dominiosPermitidos.indexOf(origin) !== -1) {
