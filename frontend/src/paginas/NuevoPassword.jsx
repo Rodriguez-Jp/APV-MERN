@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import clienteAxios from "../config/axios";
 import Alerta from "../components/Alerta";
-import { Link, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const NuevoPassword = () => {
   const [nuevaPassword, setNuevaPassword] = useState("");
@@ -9,8 +9,10 @@ const NuevoPassword = () => {
   const [alerta, setAlerta] = useState({});
   const [cargando, setCargando] = useState(true);
   const [tokenConfirmado, setTokenConfirmado] = useState(false);
+  const [passwordCambiada, setPasswordCambiada] = useState(false);
   const params = useParams();
   const { token } = params;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const confirmarToken = async () => {
@@ -40,7 +42,27 @@ const NuevoPassword = () => {
       return;
     }
 
+    setAlerta({});
+
     //Despues de pasadas las validaciones, hacemos el post en la API
+    try {
+      const url = `/veterinarios/olvide-password/${token}`;
+      await clienteAxios.post(url, {
+        password: nuevaPassword,
+      });
+      setAlerta({
+        msg: "Password reestablecida, seras redirigido al login!",
+        error: false,
+      });
+      setPasswordCambiada(true);
+
+      //Lo envia de nuevo al login
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      setAlerta("Hubo un error cambiando tu password");
+    }
   };
 
   return (
@@ -52,7 +74,7 @@ const NuevoPassword = () => {
       </div>
       <div className="shadow-xl px-5 py-10 rounded-xl mt-20 md:mt-10">
         {!cargando && <Alerta alerta={alerta} />}
-        {tokenConfirmado && (
+        {tokenConfirmado && !passwordCambiada && (
           <form
             action=""
             className="md:flex flex-col justify-center"
